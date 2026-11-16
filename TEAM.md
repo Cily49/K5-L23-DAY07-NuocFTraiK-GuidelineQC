@@ -1,8 +1,8 @@
 # Thông tin nhóm
 
-- Tên nhóm:
-- Mã thành viên (ba chữ số):
-- Người điều phối:
+- Tên nhóm: NuocFTraiK
+- Mã thành viên (ba chữ số): LeTienBinh-2A202603346, DoHoangAnh-2A202603187, NinhHaiNam-2A202603276, ChuTuanNgoc-2A202603234, TranThuHuyen-2A202603274
+- Người điều phối: LeTienBinh-2A202603346
 - Người review bản cuối:
 - Commit chốt bài (điền ở kênh nộp sau khi commit):
 
