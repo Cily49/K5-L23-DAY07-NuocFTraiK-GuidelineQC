@@ -1,10 +1,10 @@
-# Guideline gán nhãn — cá nhân (sửa từ v0) — DoHoangAnh-2A202603187
+# Guideline gán nhãn — cá nhân (sửa từ v0) — 187
 
 > Bản nháp cá nhân cho Pha 1. Chưa phải quyết định của nhóm; sẽ đối chiếu ở Pha 2.
 
 - Phiên bản: v0-cá nhân
 - Ngày: 2026-11-16
-- Người viết / duyệt: DoHoangAnh-2A202603187 
+- Người viết / duyệt: 187
 
 ## 1. Mục tiêu
 Nhãn dùng để huấn luyện mô hình phát hiện **người và phương tiện** trên ảnh đường phố 2D (camera giao thông, xe tự lái).

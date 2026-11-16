@@ -1,6 +1,6 @@
-# Guideline gán nhãn — Trần Thu Huyền 
+# Guideline gán nhãn — 274
 
-> Đây là bản guideline gán nhãn của Trần Thu Huyền - 2A202603274
+> Đây là bản guideline gán nhãn của 274
 
 - Phiên bản: v1.0
 - Loại nhãn: bounding box (hộp chữ nhật) trên ảnh đường phố

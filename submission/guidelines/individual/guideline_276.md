@@ -1,4 +1,4 @@
-# Guideline gán nhãn — bản cá nhân v0.1 — 2A202603276
+# Guideline gán nhãn — bản cá nhân v0.1 — 276
 
 - Phiên bản: v0.1 (bản cá nhân)
 - Ngày: 2026-11-16

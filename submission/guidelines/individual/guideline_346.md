@@ -5,7 +5,7 @@
 
 - Phiên bản: v2.0 - cá nhân
 - Ngày: 16/11/2026
-- Người viết / duyệt: LeTienBinh-2A202603346 / (chưa duyệt)
+- Người viết / duyệt: 346 / (chưa duyệt)
 
 ## 1. Mục tiêu
 Nhãn dùng để huấn luyện mô hình phát hiện vật 2D (bounding box) cho phương tiện và người trên ảnh đường phố.
