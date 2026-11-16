@@ -34,10 +34,14 @@ Nếu vật là đồ chơi, tượng, mannequin hoặc hình ảnh thì không 
 
 ## 3. Quy tắc vẽ box
 
-1. Gán box cho mọi người và phương tiện trong ảnh.
-2. Box ôm sát vật.
-3. Chọn đúng lớp và thuộc tính.
-
+1. Vẽ một box riêng cho mỗi người và phương tiện thật thuộc lớp đã thống nhất. Không gộp nhiều vật vào một box.
+2. Box ôm sát phần nhìn thấy của vật. Nếu vật bị che, không đoán phần khuất; chọn `occluded_level` theo phần 2.
+3. Nếu vật bị khung ảnh cắt, vẽ box đến mép ảnh, không vượt ra ngoài ảnh, rồi chọn `truncated=yes`.
+4. Gán người và xe riêng: người ngồi trên xe vẫn có box `person`, xe có box riêng.
+5. Xe đang được chở cũng là vật riêng nếu nhìn rõ: gán box xe chở và từng xe được chở.
+6. Không gán tượng, mannequin, hình in hoặc đồ chơi như người/phương tiện thật. Với ảnh phản chiếu hoặc xe ba bánh chưa có lớp được nhóm duyệt, đánh dấu `can_review` và ghi lại để hỏi nhóm.
+7. Chỉ dùng `ignore_region` cho cụm quá đông/khó tách theo quy tắc nhóm; không dùng thay cho nhãn của một vật riêng lẻ. Không tự thêm lớp mới.
+8. Theo ngưỡng bài lab, bỏ qua vật cao dưới 20 pixel. Nếu việc này gây nghi ngờ, ghi lại để nhóm xem.
 ## 4. Ca khó
 
 Các quyết định dưới đây là đề xuất cá nhân để nhóm thảo luận; những ca có `can_review` cần được thống nhất trước khi gán nhãn chính thức.
@@ -55,5 +59,17 @@ Các quyết định dưới đây là đề xuất cá nhân để nhóm thảo
 
 ## 5. QC và phiên bản
 
-- Mọi thay đổi làm đổi nhãn đều tăng phiên bản guideline.
-- Ca mơ hồ: tick `can_review`.
+### Kiểm tra chất lượng (đề xuất cá nhân)
+
+- Chạy validator của repo để kiểm tra ảnh, lớp, thuộc tính và box có hợp lệ không.
+- So sánh nhãn giữa các thành viên và xem ảnh overlay để tìm vật bị bỏ sót, box thừa, sai lớp hoặc lệch vị trí. Script hỗ trợ kiểm tra nhưng không thay thế việc xem ảnh gốc.
+- Theo ngưỡng hiện có trong `taxonomy.json`: IoU là `0.85` với vật lớn và `0.70` với vật nhỏ; IAA yêu cầu IoU `0.85` và đồng thuận lớp `0.95`.
+- Tỷ lệ ảnh lỗi tối đa là `2%`; báo cáo cần ghi cả số lỗi và tổng số ảnh đã kiểm. Không tự thay đổi các ngưỡng trong `taxonomy.json`.
+
+### Ca chưa chắc và lịch sử phiên bản
+
+Khi chưa chắc, đánh dấu `can_review`, ghi mã ảnh và lý do. Nhóm sẽ thống nhất cách xử lý; không xem đề xuất cá nhân là quy tắc chung đã được duyệt.
+
+| Phiên bản | Thay đổi | Lý do |
+|---|---|---|
+| `v0.1` | Làm rõ lớp, thuộc tính, quy tắc box và ca khó; đề xuất lớp `three_wheeler`. | Các tình huống trong bộ ảnh cần được nhóm xem xét; lớp mới chỉ dùng sau khi nhóm duyệt. |
