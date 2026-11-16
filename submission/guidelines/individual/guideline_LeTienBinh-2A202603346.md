@@ -3,7 +3,7 @@
 > Copy file này (hoặc `guideline_v0_starter.md`) rồi viết. Một guideline đủ gồm **5 phần**. Câu nào của v0
 > làm hai người đọc ra hai cách khác nhau thì phải viết lại cho một cách hiểu duy nhất.
 
-- Phiên bản: v1.0 - cá nhân
+- Phiên bản: v2.0 - cá nhân
 - Ngày: 16/11/2026
 - Người viết / duyệt: LeTienBinh-2A202603346 / (chưa duyệt)
 
@@ -17,15 +17,18 @@ Sai nguy hiểm nhất: (1) bỏ sót người hoặc xe thật → mô hình kh
 | Lớp | Định nghĩa (một câu) | Ví dụ | Phản ví dụ / dễ nhầm với |
 |---|---|---|---|
 | car | Ô tô con chở người (sedan, SUV, hatchback, taxi), tối đa ~9 chỗ. | img_015 | Xe đồ chơi/mô hình (img_038), tượng xe (img_027) |
-| truck | Xe chở hàng có cabin tách rời thùng hàng, kể cả xe đầu kéo và xe chở ô tô. | img_002 | Bán tải nắp thùng cao (img_037) |
-| van | Xe thùng kín liền khối cabin, chở hàng hoặc chở khách (minivan, xe 16 chỗ). | img_005 | Xe buýt cỡ lớn (img_009) |
-| motorcycle | Xe hai bánh có động cơ (xe máy, xe tay ga, mô tô). | img_026 | Xe đạp, xích lô không động cơ (img_006, img_029, img_039) |
+| truck | Xe chở hàng có cabin tách rời thùng hàng, kể cả xe bán tải (có hoặc không có nắp thùng), xe đầu kéo và xe chở ô tô. | img_002, img_037 | Xe thùng kín liền khối cabin → `van` |
+| van | Xe thùng kín liền khối cabin, chở hàng hoặc chở khách, tối đa 16 chỗ (minivan, xe 16 chỗ). | img_005 | Xe chở khách trên 16 chỗ → `bus` |
+| bus | Xe chở khách cỡ lớn trên 16 chỗ (xe buýt thành phố, xe khách, xe du lịch). | img_032, img_037 (xe buýt phía sau) | Xe 16 chỗ trở xuống → `van`; xe tải thùng kín có cabin tách rời → `truck` |
+| motorcycle | Xe hai bánh có động cơ (xe máy, xe tay ga, mô tô), kể cả mô tô gắn thùng sidecar. | img_026, img_022 | Xe đạp, xích lô không động cơ (img_006, img_029, img_039); xe 3 bánh có mui → `three_wheeler` |
+| three_wheeler | Xe ba bánh có động cơ, có mui, chở khách hoặc hàng (tuk-tuk, auto rickshaw, xe lam). | img_004, img_035 | Xích lô đạp không động cơ (img_006) → không gán; mô tô sidecar (img_022) → `motorcycle` |
 | person | Người thật, đứng, đi bộ hoặc đang ngồi trên xe. | img_001 | Tượng (img_011, img_017), ma-nơ-canh (img_033), ảnh người trên biển quảng cáo (img_018) → không gán |
+| ignore_region | Vùng bỏ qua (không phải vật): cụm vật quá nhỏ (cao < 20 px) hoặc đám đông dày không tách được từng cá thể; bỏ sót vật bên trong vùng này không tính là lỗi. | img_019 (đám đông sau rào chắn) | Người/xe tách được và cao ≥ 20 px → vẽ box riêng theo lớp; vật giả → không gán, không dùng `ignore_region` |
 
 Vật **không thuộc lớp nào**:
 - Vật giả (tượng, đồ chơi, ma-nơ-canh, hình in, phản chiếu trong gương/kính) → **không gán**.
-- Phương tiện chưa có lớp (tuk-tuk img_004/img_035, xe buýt) →  đề xuất lớp mới `tuk_tuk`, `bus` và tick `can_review`.
-- Cụm vật quá nhỏ (cao < 20 px) hoặc đám đông dày không tách được từng cá thể → vẽ một vùng `ignore_region`.
+- Xe không động cơ (xe đạp, xích lô) → **không gán**.
+- Phương tiện thật không khớp lớp nào ở trên → tick `can_review` và ghi vào bảng Ca khó.
 
 ### Thuộc tính
 | Thuộc tính | Các mức | Ngưỡng cụ thể |
@@ -43,13 +46,13 @@ Vật **không thuộc lớp nào**:
 - **R-06 Vật nhỏ:** vật cao < 20 px không vẽ box riêng; nhiều vật nhỏ gần nhau → một `ignore_region`.
 - **R-07 Người đi xe máy:** 1 box `motorcycle` ôm cả người và xe.
 - **R-08 Xe chở xe (img_002):** 1 box `truck` + từng box `car` cho ô tô trên sàn.
-- **R-09 Hàng hóa chất cao (tuk-tuk img_035):** chỉ vẽ thân xe
+- **R-09 Hàng hóa chất cao (tuk-tuk img_035):** box `three_wheeler` chỉ ôm thân xe, không ôm phần hàng chất nhô lên trên.
 
 ## 4. Ca khó
 | Ảnh | Tình huống | Rule ID | Quyết định | Lý do |
 |---|---|---|---|---|
 | img_002 | Xe tải chở 8 ô tô trên 2 sàn | R-08 | Gán box car cho xe car, box truck cho xe chở car | Car và truck đều có trong ảnh nên phải gán label cho cả 2 |
-| img_004 | Xe tuk-tuk 3 bánh | — (đề xuất lớp `tuk_tuk`) | Không gán vào `car` hay `motorcycle`; ghi ảnh vào `submission/qc/image_issues.csv` kèm đề xuất lớp `tuk_tuk` | Chưa có lớp phù hợp; tuk-tuk (3 bánh, có mui, chở khách) không khớp định nghĩa lớp nào, ép vào lớp gần nhất sẽ làm bẩn định nghĩa `car`/`motorcycle` |
+| img_004 | Hai xe tuk-tuk 3 bánh đỗ cạnh nhau | Định nghĩa `three_wheeler`, R-02 | Gán mỗi xe 1 box `three_wheeler`; xe phía sau bị che chọn `occluded_level` theo % bị che | Tuk-tuk (3 bánh, có mui, chở khách) không khớp `car` hay `motorcycle`; ép vào lớp gần nhất sẽ làm bẩn định nghĩa hai lớp đó, nên tách thành lớp riêng |
 | img_017 | Tượng người | R-04 | Không gán | Không phải người thật |
 | img_020 | Phản chiếu qua gương chiếu hậu | R-04 | Không gán | Vật phản chiếu |
 | img_037 | Bán tải gắn nắp thùng cao (truck cap) | Định nghĩa `truck` | Gán `truck` | Cabin vẫn tách rời thùng hàng (thấy rõ khe giữa cabin và nắp thùng); nắp thùng chỉ là phụ kiện gắn thêm, không biến xe thành `van` liền khối. Mọi xe bán tải (img_001, img_012, img_028) đều gán `truck` để nhất quán |
@@ -83,7 +86,7 @@ Nếu chưa chốt, đánh dấu `can_review` trên box hoặc ghi vấn đề c
 | Phiên bản | Thay đổi | Lý do (ca nào) |
 |---|---|---|
 | v0 | Bản khởi đầu của lab: 5 lớp, 3 thuộc tính, quy tắc chung | — |
-| v0.1 | Viết lại định nghĩa từng lớp kèm ví dụ / phản ví dụ; định lượng `occluded_level` theo % bị che; thêm R-01 → R-09 | v0 làm hai người đọc ra hai cách: vật giả (img_017, img_020, img_033), xe chở xe (img_002), người đi xe máy (img_026) |
-| v0.1 | Bán tải (kể cả có nắp thùng) gán `truck`; mô tô sidecar gộp 1 box `motorcycle` | img_037, img_028, img_022 |
-| v0.1 | Tuk-tuk, xe buýt chưa có lớp → không gán, đề xuất lớp `tuk_tuk`, `bus` | img_004, img_035, img_037 (xe buýt phía sau) |
+| v1.0 | Viết lại định nghĩa từng lớp kèm ví dụ / phản ví dụ; định lượng `occluded_level` theo % bị che; thêm R-01 → R-09 | v0 làm hai người đọc ra hai cách: vật giả (img_017, img_020, img_033), xe chở xe (img_002), người đi xe máy (img_026) |
+| v1.0 | Bán tải (kể cả có nắp thùng) gán `truck`; mô tô sidecar gộp 1 box `motorcycle` | img_037, img_028, img_022 |
+| v1.0 | Thêm lớp `bus` (> 16 chỗ, tách khỏi `van`) và `three_wheeler` (xe 3 bánh có động cơ, có mui); đưa `ignore_region` vào bảng lớp với định nghĩa và phản ví dụ | img_004, img_035 (tuk-tuk), img_032, img_037 (xe buýt), img_019 (đám đông) |
 | (chờ chốt) | Người ngồi trong ô tô có vẽ `person` riêng hay không | img_019 |
