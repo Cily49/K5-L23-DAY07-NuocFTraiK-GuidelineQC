@@ -25,8 +25,8 @@ Nguyên tắc chung đã dùng trong bản này:
 | Lớp | Định nghĩa | Ví dụ | Phản ví dụ / dễ nhầm với |
 |---|---|---|---|
 | `car` | Ô tô con: khoang hành khách và khoang hành lý liền một khối (sedan, hatchback, SUV, crossover, MPV 5–7 chỗ). | 023, 015 | `van`: thân hộp, đầu xe ngắn |
-| `van` | Xe van / minibus: thân hình hộp nguyên khối, đầu xe ngắn (mũi bẹt hoặc nhô rất ngắn), khoang sau liền cabin, có cửa trượt hông hoặc cửa đôi phía sau. | 005 | `car` (MPV) |
-| `truck` | Xe có thùng hàng riêng, tách khỏi cabin: (a) xe tải — cabin đầu vuông hoặc đầu dài chuyên dụng, thùng kín / bạt / ben, xe bồn, đầu kéo; (b) xe bán tải (pickup) — thùng hở phía sau tách khỏi cabin bằng vách ngăn và khe hở cấu trúc; (c) xe buýt. | 007, 002, 001, 012, 028, 036, 037, 009, 032 | `car` (SUV: cốp liền khoang khách), `van` |
+| `van` | Xe van chở người hoặc hàng, dài cỡ ô tô con: thân hình hộp nguyên khối, đầu xe ngắn (mũi bẹt hoặc nhô rất ngắn), khoang sau liền cabin, có cửa trượt hông hoặc cửa đôi phía sau. | 005 | `car` (MPV); minibus, xe buýt (→ `truck`) |
+| `truck` | Xe có thùng hàng riêng, tách khỏi cabin: (a) xe tải — cabin đầu vuông hoặc đầu dài chuyên dụng, thùng kín / bạt / ben, xe bồn, đầu kéo; (b) xe bán tải (pickup) — thùng hở phía sau tách khỏi cabin bằng vách ngăn và khe hở cấu trúc; (c) xe chở khách dài từ khoảng 1,5 lần ô tô con trở lên (minibus, xe buýt). | 007, 002, 001, 012, 028, 036, 037, 009, 032 | `car` (SUV: cốp liền khoang khách), `van` |
 | `motorcycle` | Xe máy, mô tô; gồm cả xe có thùng bên (sidecar) và xe ba bánh có đầu ghi-đông xe máy. | 006, 022, 004 | xe đạp, xích lô (→ `ignore_region`) |
 | `person` | Người thật, kể cả người hóa trang. | 014, 034, 011 | tượng, ma-nơ-canh, hình in |
 | `ignore_region` | Vùng không gán từng vật; bỏ sót trong vùng không tính lỗi. Dùng cho xe đạp, xích lô, tượng, gương, xe chủ, cụm đông / nhỏ. | 021 (cụm xe phía sau), 003 (xe đạp) | — |
@@ -41,10 +41,10 @@ Xem R-05 (vật không thật), R-06 (phản chiếu, xe chủ), R-07 (đám đ�
 
 | Giá trị | Tên | Ngưỡng | Cách nhận biết |
 |---|---|---|---|
-| `0` | Không che | 0–10% | Thấy trọn vật, hoặc chỉ bị che bởi chi tiết rất nhỏ (cành mảnh, dây điện). |
-| `1` | Che nhẹ | 11–40% | Mất một phần đầu, đuôi hoặc bánh, vẫn thấy rõ phần lớn thân. |
-| `2` | Che trung bình | 41–70% | Mất khoảng nửa thân đến phần lớn thân; phải suy luận biên box từ phần còn lại. |
-| `3` | Che nặng | 71–90% | Chỉ lộ một góc nhỏ (đầu xe, nóc xe, một bên vai) nhưng vẫn chắc chắn là vật gì. |
+| `0` | Không che | ≤ 10% | Thấy trọn vật, hoặc chỉ bị che bởi chi tiết rất nhỏ (cành mảnh, dây điện). |
+| `1` | Che nhẹ | > 10% đến 40% | Mất một phần đầu, đuôi hoặc bánh, vẫn thấy rõ phần lớn thân. |
+| `2` | Che trung bình | > 40% đến 70% | Mất khoảng nửa thân đến phần lớn thân; phải suy luận biên box từ phần còn lại. |
+| `3` | Che nặng | > 70% đến 90% | Chỉ lộ một góc nhỏ (đầu xe, nóc xe, một bên vai) nhưng vẫn chắc chắn là vật gì. |
 | (không gán) | Che toàn phần | > 90% | Không gán; nếu cần thì gộp vào `ignore_region`. |
 
 **`truncated`** (R-09):
@@ -64,7 +64,7 @@ Xem R-05 (vật không thật), R-06 (phản chiếu, xe chủ), R-07 (đám đ�
 
 | Loại xe | Ảnh | Quy tắc |
 |---|---|---|
-| Xe buýt | 009, 032 | `truck` (kích thước và chuyển động tương đồng). |
+| Minibus, xe buýt | 009, 032 | `truck` nếu dài từ khoảng 1,5 lần ô tô con trở lên (kích thước và chuyển động tương đồng). Ngắn hơn → `van`. |
 | Tuk-tuk, xe lam, xe ba gác máy | 004, 016, 035 | `motorcycle` nếu đầu xe là ghi-đông xe máy; `truck` nếu có cabin kín và vô-lăng ô tô. |
 | Xe có thùng bên (sidecar) | 022 | Một box `motorcycle` bao cả thân xe máy và thùng bên. |
 | Xe đạp | 003, 029 | `ignore_region` (taxonomy không có lớp xe đạp; tốc độ và quỹ đạo khác xe máy nên không gộp vào `motorcycle`). Người đạp xe vẫn gán `person`. |
@@ -86,9 +86,10 @@ Dựa vào cấu trúc khung và khoang chở hàng nhìn thấy được, khôn
 |---|---|---|
 | Hình 2D trên mặt phẳng (người trên biển quảng cáo, tranh tường) | 018, 026 | Bỏ qua hoàn toàn: không box, không `ignore_region`. |
 | Tượng, ma-nơ-canh (tượng người, tượng pickup, tượng ngựa, ma-nơ-canh) | 017, 027, 028, 033 | `ignore_region` (hình 3D giống vật thật nhưng không di chuyển; tránh phạt nhầm false positive). |
+| Tượng đặt trên xe thật | 028 | Xe thật gán bình thường (028: `truck`). Tượng phủ `ignore_region` riêng. Tượng **không** tính vào `occluded_level` của xe nếu nằm trên xe, không che thân xe. |
 | Mô hình nhỏ / đồ chơi | 038 | Bỏ qua nếu nhỏ hơn vật thật rõ rệt và nằm trên vỉa hè / bàn / kệ; `ignore_region` nếu nằm dưới lòng đường gây nhiễu. |
 | Người hóa trang | 011 | `person` bình thường (người thật đang di chuyển). |
-| Xe diễu hành, xe điêu khắc có động cơ | 011, 019 | `truck` nếu kích thước lớn; `ignore_region` nếu hình dạng quá khác mọi phương tiện. |
+| Xe diễu hành, xe độ / trang trí | 011, 019 | Có bánh và chạy được trên đường → gán theo hình dạng như xe thường (019 → `car`; 011 các xe máy độ → `motorcycle`). Không phải phương tiện (khung, mô hình trang trí không có bánh chạy được) → `ignore_region`. |
 
 ### R-06 — Phản chiếu và xe chủ (ego)
 - Phản chiếu trên mặt đường ướt, vũng nước (013, 031): bỏ qua hoàn toàn.
@@ -96,10 +97,10 @@ Dựa vào cấu trúc khung và khoang chở hàng nhìn thấy được, khôn
 - Xe chủ (040): phần đầu xe, ca-pô, gương hoặc thân của chính xe mang camera (hoặc xe đang chở người chụp) nằm cố định ở mép dưới / mép bên: không gán lớp phương tiện, phủ `ignore_region`.
 
 ### R-07 — Đám đông và bãi đỗ xe (008, 019, 021, 030, 032)
-- Gán từng vật tối đa 10 vật trong một cụm đứng / đỗ sát nhau, chồng lấn nhiều.
-- Gán đủ mọi vật ở hàng đầu (tiền cảnh), tiếp xúc trực tiếp với luồng giao thông hoặc dễ tách nhất.
-- Phần phía sau (từ vật thứ 11, bị che chồng nhau quá 50%, không tách được biên từng box): một hoặc vài box `ignore_region` bao cả cụm.
-- Không vẽ `ignore_region` đè lên các vật hàng đầu đã gán.
+- Gán box riêng cho **mọi** vật thỏa **cả hai** điều kiện: (1) nhìn được biên để vẽ box riêng, **và** (2) bị che ≤ 70% (`occluded_level` 0–2).
+- Không giới hạn số lượng: hàng đầu có bao nhiêu vật thỏa điều kiện thì gán bấy nhiêu.
+- Phần còn lại của cụm (thường ở phía sau: che > 70% **hoặc** không tách được biên): một hoặc vài box `ignore_region` bao cả cụm.
+- Không vẽ `ignore_region` đè lên các vật đã gán box riêng.
 
 ### R-08 — Vật nhỏ, ở xa (009, 025, 031, 034, 039)
 - Ngưỡng `min_box_height_px = 20`, đo theo chiều cao box trên độ phân giải gốc.
@@ -109,7 +110,7 @@ Dựa vào cấu trúc khung và khoang chở hàng nhìn thấy được, khôn
 ### R-09 — Ảnh mờ, cắt mép, hàng hóa
 - Mờ chuyển động (014): gán bình thường nếu vẫn chắc chắn loại xe và biên tương đối. Chỉ bỏ qua hoặc dùng `ignore_region` khi vệt nhòe không còn nhận ra là vật gì.
 - Cắt mép (015, 040): ngưỡng `truncated` ở mục 2.
-- Hàng chất cao trên xe (035): box xe (`motorcycle`, `truck`) bao cả hàng cố định trên xe nếu hàng làm thay đổi biên dạng (cao, rộng) của xe. Ngoại lệ: vật quá mảnh như ống nước, thanh sắt thò ra quá 1 m phía sau thì để ngoài box hoặc phủ `ignore_region`.
+- Hàng chất cao trên xe (035): box xe (`motorcycle`, `truck`) bao cả hàng cố định trên xe nếu hàng làm thay đổi biên dạng (cao, rộng) của xe. Ngoại lệ: vật quá mảnh như ống nước, thanh sắt thò ra quá 1 m phía sau thì để ngoài box, không vẽ thêm gì.
 
 ### R-10 — Mức che khuất
 Thang ở mục 2.
@@ -119,24 +120,25 @@ Thang ở mục 2.
 | Ảnh | Tình huống | Rule ID | Quyết định | Lý do |
 |---|---|---|---|---|
 | 005, 006, 010, 026 | Người lái và người ngồi sau trên xe máy | R-01 | 1 `motorcycle` + 1 `person` mỗi người | Người và xe là hai vật khác nhau |
-| 009, 032 | Xe buýt | R-02 | `truck` | Kích thước, chuyển động tương đồng |
+| 009, 032 | Minibus (009), xe buýt (032) | R-02 | `truck` | Dài ≥ 1,5 lần ô tô con |
 | 004, 016, 035 | Tuk-tuk, xe lam | R-02 | `motorcycle` (ghi-đông) / `truck` (cabin kín, vô-lăng) | Theo cơ cấu điều khiển |
 | 022 | Xe có thùng bên | R-02 | Một box `motorcycle` | Thùng gắn liền xe |
 | 003, 029 | Xe đạp | R-02 | `ignore_region` cho xe, `person` cho người | Taxonomy không có lớp xe đạp |
 | 023, 039 | Xích lô | R-02 | `ignore_region` cho xe, `person` cho người | Phi cơ giới, không có lớp |
 | 001, 012, 028, 036 | Xe bán tải | R-03 | `truck` | Có thùng hàng riêng tách cabin |
+| 028 | Tượng ngựa trên thùng xe bán tải | R-05 | Xe `truck`; tượng `ignore_region`; tượng không tính vào che khuất của xe | Xe thật, tượng không thật |
 | 037 | Pickup có nắp thùng | R-03 | `truck` | Thấy khe chia cabin / thùng |
 | 002 | Xe chở ô tô | R-04 | `truck` + `car` cho từng xe ≥ 20 px | Mỗi xe là một vật thật |
 | 024 | Ô tô trên nóc ô tô | R-04 | Hai box riêng | Hai vật thật |
 | 018, 026 | Người trên biển quảng cáo, tranh tường | R-05 | Bỏ qua | Hình 2D |
 | 017, 027, 028, 033 | Tượng, ma-nơ-canh | R-05 | `ignore_region` | 3D giống thật, không di chuyển |
 | 038 | Xe đồ chơi trong tủ kính | R-05 | Bỏ qua | Nhỏ hơn vật thật rõ rệt, trên kệ |
-| 011 | Người hóa trang, xe điêu khắc | R-05 | `person`; xe: `truck` / `ignore_region` | Người thật; xe theo hình dạng |
-| 019 | Xe diễu hành | R-05 | `truck` / `ignore_region` | Theo kích thước, hình dạng |
+| 011 | Người hóa trang, xe máy độ | R-05 | `person`; xe máy độ: `motorcycle` | Người thật; xe có bánh, chạy được |
+| 019 | Xe diễu hành dạng ô tô | R-05 | `car` | Có bánh, chạy được, hình dạng ô tô |
 | 013, 031 | Phản chiếu mặt đường ướt | R-06 | Bỏ qua | Không phải vật |
 | 020 | Gương chiếu hậu | R-06 | `ignore_region` phủ mặt gương | Ảnh đảo chiều, méo |
 | 040 | Xe chủ ở tiền cảnh | R-06 | `ignore_region` | Vật tĩnh luôn bám camera |
-| 008, 019, 021, 030, 032 | Đám đông, bãi xe | R-07 | Gán ≤ 10 vật hàng đầu, phía sau `ignore_region` | Không tách được biên |
+| 008, 019, 021, 030, 032 | Đám đông, bãi xe | R-07 | Box riêng cho vật tách được biên và che ≤ 70%; phần còn lại `ignore_region` | Không tách được biên |
 | 009, 025, 031, 034, 039 | Vật nhỏ ở xa | R-08 | < 20 px bỏ qua; cụm thì `ignore_region` | Ngưỡng taxonomy |
 | 014 | Xe máy nhòe chuyển động | R-09 | Gán nếu nhận ra | Vẫn là vật thật |
 | 015, 040 | Xe bị cắt mép | R-09 | `truncated` theo ngưỡng 10% | Đo được |
@@ -157,7 +159,7 @@ Mọi con số luôn ghi kèm mẫu số, ví dụ `1/40`, để người đọc
 
 ### Ca mơ hồ thì ai quyết?
 1. **Lúc gán:** không hỏi bạn cùng nhóm. Vẫn vẽ box theo cách hiểu tốt nhất, tick `can_review`. Không vẽ được thì ghi ảnh, vùng, lý do.
-2. **Lúc họp calibration:** cả nhóm xem ca đó, người điều phối (274) chốt. Mỗi quyết định ghi một dòng: ca nào, quyết định gì, quy tắc nào (R-xx), ai chốt.
+2. **Lúc họp calibration:** cả nhóm xem ca đó, người điều phối (346) chốt. Mỗi quyết định ghi một dòng: ca nào, quyết định gì, quy tắc nào (R-xx), ai chốt.
 3. **Quyết định thành quy tắc mới:** ghi vào guideline và tăng phiên bản.
 
 ### Khi nào tăng phiên bản?
