@@ -39,8 +39,18 @@ Nếu vật là đồ chơi, tượng, mannequin hoặc hình ảnh thì không 
 
 ## 4. Ca khó
 
-(chưa có)
+Các quyết định dưới đây là đề xuất cá nhân để nhóm thảo luận; những ca có `can_review` cần được thống nhất trước khi gán nhãn chính thức.
 
+| Ảnh | Tình huống | Rule ID | Quyết định ban đầu | Lý do |
+|---|---|---|---|---|
+| `img_002` | Xe tải chở nhiều ô tô | R-01 | Gán `truck` cho xe chở và `car` riêng cho từng ô tô nhìn thấy rõ. | Mỗi phương tiện là một vật riêng, dù ô tô đang được chở. |
+| `img_004`, `img_016`, `img_035` | Tuk-tuk/xe ba bánh có động cơ | R-02 | Đề xuất gán `three_wheeler`; đánh dấu `can_review` cho tới khi nhóm duyệt lớp này. | Taxonomy hiện tại chưa có lớp phù hợp; không nên tự gán thành `motorcycle` hay `car`. |
+| `img_006`, `img_021` | Cảnh đông, người và xe máy che lẫn nhau | R-03 | Gán riêng từng người/xe nhận diện được; dùng mức che khuất theo phần 2. Đánh dấu `can_review` nếu không chắc vật nào bị che. | Tránh gộp nhiều người hoặc nhiều xe vào một nhãn. |
+| `img_020` | Xe và đường chỉ xuất hiện trong gương chiếu hậu | R-04 | Đánh dấu `can_review`; đề xuất không gán vật chỉ nhìn thấy qua ảnh phản chiếu cho tới khi nhóm thống nhất. | Quy tắc v0 chưa nói rõ ảnh phản chiếu có thuộc đối tượng cần gán hay không. |
+| `img_027` | Xe tải dạng tượng/trưng bày | R-05 | Không gán tượng xe là `truck`; gán các đối tượng thật khác nếu có. | Hình dáng giống xe nhưng đây không phải phương tiện thật đang được nhận diện trong cảnh. |
+| `img_038` | Xe đồ chơi và mannequin trong cửa kính | R-06 | Không gán xe đồ chơi là `car`, không gán mannequin là `person`. | Đây là đồ trưng bày, không phải xe/người thật. |
+| `img_029` | Người đi xe đạp và người đi xe máy | R-07 | Gán người và xe máy nhìn thấy; không gán xe đạp vì taxonomy hiện không có lớp xe đạp. | Không ép xe đạp vào lớp `motorcycle`. |
+| `img_017`, `img_022` | Tượng người cưỡi ngựa/tượng người | R-08 | Không gán tượng là `person`. | Người trong ảnh là tượng, không phải người thật. |
 ## 5. QC và phiên bản
 
 - Mọi thay đổi làm đổi nhãn đều tăng phiên bản guideline.
