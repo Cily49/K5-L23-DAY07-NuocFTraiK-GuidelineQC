@@ -6,7 +6,7 @@
 
 ## 1. Mục tiêu
 
-**Nhãn dùng để làm gì?** Dạy máy tính nhìn ảnh đường phố và tự khoanh ra **người** và **xe** (ô tô, xe tải, xe van, xe máy). Ứng dụng: camera giao thông, xe tự lái.
+**Nhãn dùng để làm gì?** Dạy máy tính nhìn ảnh đường phố và tự khoanh ra **người** và **xe** (ô tô, xe van, xe tải, xe buýt, xe máy, xe đạp, xe lam / tuk-tuk). Ứng dụng: camera giao thông, xe tự lái.
 
 **Sai ở đâu thì nguy hiểm?**
 - **Bỏ sót** người hoặc xe thật → xe tự lái "không thấy" để tránh. Đây là lỗi nguy hiểm nhất.
@@ -16,7 +16,9 @@
 
 Nguyên tắc chung đã dùng trong bản này:
 - Mô hình chỉ học những vật thể thật có thể tham gia hoặc cản trở giao thông.
-- Dùng đúng 6 lớp của `taxonomy.json`, không thêm lớp. Xe không có lớp riêng được xếp vào lớp gần nhất về ngữ nghĩa; phương tiện phi cơ giới (xe đạp, xích lô) dùng `ignore_region`.
+- Thêm 3 lớp vào 6 lớp của `taxonomy.json` v0: `bus`, `bicycle`, `auto_rickshaw` (xem bảng lớp). Lý do: các loại xe này có nhiều trong 40 ảnh; ép chúng vào `car` / `motorcycle` / `truck` hoặc bỏ qua thì mô hình học sai hoặc bỏ sót xe thật.
+- Phân loại theo **hình dạng nhìn thấy**, không theo quốc gia hay tên gọi địa phương: cùng một loại xe thì cùng lớp, dù ở Việt Nam, Thái Lan hay Ấn Độ.
+- Không thêm lớp khi trong lô gần như không có mẫu (ví dụ xe ba gác chở hàng: không có ảnh rõ).
 
 ## 2. Lớp và thuộc tính
 
@@ -25,11 +27,14 @@ Nguyên tắc chung đã dùng trong bản này:
 | Lớp | Định nghĩa | Ví dụ | Phản ví dụ / dễ nhầm với |
 |---|---|---|---|
 | `car` | Ô tô con: khoang hành khách và khoang hành lý liền một khối (sedan, hatchback, SUV, crossover, MPV 5–7 chỗ). | 023, 015 | `van`: thân hộp, đầu xe ngắn |
-| `van` | Xe van chở người hoặc hàng, dài cỡ ô tô con: thân hình hộp nguyên khối, đầu xe ngắn (mũi bẹt hoặc nhô rất ngắn), khoang sau liền cabin, có cửa trượt hông hoặc cửa đôi phía sau. | 005 | `car` (MPV); minibus, xe buýt (→ `truck`) |
-| `truck` | Xe có thùng hàng riêng, tách khỏi cabin: (a) xe tải — cabin đầu vuông hoặc đầu dài chuyên dụng, thùng kín / bạt / ben, xe bồn, đầu kéo; (b) xe bán tải (pickup) — thùng hở phía sau tách khỏi cabin bằng vách ngăn và khe hở cấu trúc; (c) xe chở khách dài từ khoảng 1,5 lần ô tô con trở lên (minibus, xe buýt). | 007, 002, 001, 012, 028, 036, 037, 009, 032 | `car` (SUV: cốp liền khoang khách), `van` |
-| `motorcycle` | Xe máy, mô tô; gồm cả xe có thùng bên (sidecar) và xe ba bánh có đầu ghi-đông xe máy. | 006, 022, 004 | xe đạp, xích lô (→ `ignore_region`) |
+| `van` | Xe van chở người hoặc hàng, dài cỡ ô tô con: thân hình hộp nguyên khối, đầu xe ngắn (mũi bẹt hoặc nhô rất ngắn), khoang sau liền cabin, có cửa trượt hông hoặc cửa đôi phía sau. | 005 | `car` (MPV); minibus, xe buýt (→ `bus`) |
+| `truck` | Xe có thùng hàng riêng, tách khỏi cabin: (a) xe tải — cabin đầu vuông hoặc đầu dài chuyên dụng, thùng kín / bạt / ben, xe bồn, đầu kéo; (b) xe bán tải (pickup) — thùng hở phía sau tách khỏi cabin bằng vách ngăn và khe hở cấu trúc. | 007, 002, 001, 012, 028, 036, 037 | `car` (SUV: cốp liền khoang khách), `van`, `bus` |
+| `bus` | **Lớp mới.** Xe chở khách nhiều hàng ghế, dài từ khoảng 1,5 lần ô tô con trở lên, nhiều cửa sổ dọc thân (minibus, xe buýt, xe khách). | 009, 032 | `van` (dài cỡ ô tô con), `truck` (có thùng hàng) |
+| `motorcycle` | Xe máy, mô tô **hai bánh**; gồm cả xe có thùng bên (sidecar). | 006, 022 | `auto_rickshaw` (3 bánh, có mui / khoang khách), `bicycle` (đạp, không động cơ) |
+| `auto_rickshaw` | **Lớp mới.** Xe cơ giới 3 bánh có mui hoặc khoang chở khách / hàng phía sau người lái: xe lam, tuk-tuk, auto rickshaw. | 004, 016, 035 | `motorcycle` (2 bánh, không mui), `bicycle` (xích lô: đạp bằng chân) |
+| `bicycle` | **Lớp mới.** Xe dùng sức người đạp, không động cơ: xe đạp, xích lô. | 003, 029, 023, 039 | `motorcycle` (có động cơ, ống xả, biển số) |
 | `person` | Người thật, kể cả người hóa trang. | 014, 034, 011 | tượng, ma-nơ-canh, hình in |
-| `ignore_region` | Vùng không gán từng vật; bỏ sót trong vùng không tính lỗi. Dùng cho xe đạp, xích lô, tượng, gương, xe chủ, cụm đông / nhỏ. | 021 (cụm xe phía sau), 003 (xe đạp) | — |
+| `ignore_region` | Vùng không gán từng vật; bỏ sót trong vùng không tính lỗi. Dùng cho tượng, gương, xe chủ, cụm đông / nhỏ. | 021 (cụm xe phía sau), 017 (tượng) | — |
 
 ### Vật không thuộc lớp nào
 
@@ -55,22 +60,22 @@ Xem R-05 (vật không thật), R-06 (phản chiếu, xe chủ), R-07 (đám đ�
 
 ## 3. Quy tắc vẽ box
 
-### R-01 — Người trên xe máy
-- Vẽ tách 2 loại box: `person` cho người và `motorcycle` cho xe. Không gộp làm một box.
+### R-01 — Người trên xe máy, xe đạp, xích lô
+- Vẽ tách 2 loại box: `person` cho người và box xe (`motorcycle`, `bicycle`, `auto_rickshaw`). Không gộp làm một box.
 - Mỗi người một box `person`: người lái, người ngồi sau, trẻ em ngồi trước hoặc giữa.
 - Box `motorcycle` chỉ ôm các bộ phận của xe (bánh trước, bánh sau, tay lái, gương, đuôi xe). Không nới box để bao đầu, lưng hay chân người thò ra ngoài khung xe. Ngoại lệ: bàn chân đặt trên gác chân nằm gọn trong biên của xe.
 
-### R-02 — Xe không có lớp riêng
+### R-02 — Xe đặc thù (xe buýt, xe 3 bánh, xe đạp, xích lô)
 
 | Loại xe | Ảnh | Quy tắc |
 |---|---|---|
-| Minibus, xe buýt | 009, 032 | `truck` nếu dài từ khoảng 1,5 lần ô tô con trở lên (kích thước và chuyển động tương đồng). Ngắn hơn → `van`. |
-| Tuk-tuk, xe lam, xe ba gác máy | 004, 016, 035 | `motorcycle` nếu đầu xe là ghi-đông xe máy; `truck` nếu có cabin kín và vô-lăng ô tô. |
+| Minibus, xe buýt | 009, 032 | `bus` nếu dài từ khoảng 1,5 lần ô tô con trở lên. Ngắn hơn → `van`. |
+| Tuk-tuk, xe lam, auto rickshaw | 004, 016, 035 | `auto_rickshaw` khi có **đủ**: 3 bánh, động cơ, mui hoặc khoang sau người lái. Thiếu mui / khoang (xe máy kéo thùng) → `motorcycle`. |
 | Xe có thùng bên (sidecar) | 022 | Một box `motorcycle` bao cả thân xe máy và thùng bên. |
-| Xe đạp | 003, 029 | `ignore_region` (taxonomy không có lớp xe đạp; tốc độ và quỹ đạo khác xe máy nên không gộp vào `motorcycle`). Người đạp xe vẫn gán `person`. |
-| Xích lô | 023, 039 | `ignore_region` cho phần xe. Không bao giờ gán `motorcycle` hay `car`. Người đạp và khách vẫn gán `person`. |
+| Xe đạp | 003, 029 | `bicycle` (tốc độ và quỹ đạo khác xe máy nên không gộp vào `motorcycle`). Người đạp xe gán `person` riêng. |
+| Xích lô | 023, 039 | `bicycle` (dùng sức người đạp). Không bao giờ gán `motorcycle`, `auto_rickshaw` hay `car`. Người đạp và khách gán `person` riêng. |
 
-### R-03 — Phân biệt car / van / truck
+### R-03 — Phân biệt car / van / truck / bus
 Dựa vào cấu trúc khung và khoang chở hàng nhìn thấy được, không đoán theo tải trọng (định nghĩa ở mục 2).
 - Xe bán tải (pickup) có thùng hở tách khỏi cabin → `truck` (taxonomy: "xe có thùng hàng riêng").
 - Pickup có nắp thùng (037): vẫn là `truck` nếu thấy đường chia (khe dọc) giữa cabin và thùng sau, hoặc nắp thùng có đường viền / chất liệu tách rõ khỏi nóc cabin.
@@ -110,7 +115,7 @@ Dựa vào cấu trúc khung và khoang chở hàng nhìn thấy được, khôn
 ### R-09 — Ảnh mờ, cắt mép, hàng hóa
 - Mờ chuyển động (014): gán bình thường nếu vẫn chắc chắn loại xe và biên tương đối. Chỉ bỏ qua hoặc dùng `ignore_region` khi vệt nhòe không còn nhận ra là vật gì.
 - Cắt mép (015, 040): ngưỡng `truncated` ở mục 2.
-- Hàng chất cao trên xe (035): box xe (`motorcycle`, `truck`) bao cả hàng cố định trên xe nếu hàng làm thay đổi biên dạng (cao, rộng) của xe. Ngoại lệ: vật quá mảnh như ống nước, thanh sắt thò ra quá 1 m phía sau thì để ngoài box, không vẽ thêm gì.
+- Hàng chất cao trên xe (035): box xe (`motorcycle`, `auto_rickshaw`, `truck`) bao cả hàng cố định trên xe nếu hàng làm thay đổi biên dạng (cao, rộng) của xe. Ngoại lệ: vật quá mảnh như ống nước, thanh sắt thò ra quá 1 m phía sau thì để ngoài box, không vẽ thêm gì.
 
 ### R-10 — Mức che khuất
 Thang ở mục 2.
@@ -120,11 +125,11 @@ Thang ở mục 2.
 | Ảnh | Tình huống | Rule ID | Quyết định | Lý do |
 |---|---|---|---|---|
 | 005, 006, 010, 026 | Người lái và người ngồi sau trên xe máy | R-01 | 1 `motorcycle` + 1 `person` mỗi người | Người và xe là hai vật khác nhau |
-| 009, 032 | Minibus (009), xe buýt (032) | R-02 | `truck` | Dài ≥ 1,5 lần ô tô con |
-| 004, 016, 035 | Tuk-tuk, xe lam | R-02 | `motorcycle` (ghi-đông) / `truck` (cabin kín, vô-lăng) | Theo cơ cấu điều khiển |
+| 009, 032 | Minibus (009), xe buýt (032) | R-02 | `bus` | Xe chở khách dài ≥ 1,5 lần ô tô con |
+| 004, 016, 035 | Tuk-tuk, auto rickshaw (035 chở hàng chất cao) | R-02 | `auto_rickshaw` | 3 bánh, động cơ, có mui / khoang sau |
 | 022 | Xe có thùng bên | R-02 | Một box `motorcycle` | Thùng gắn liền xe |
-| 003, 029 | Xe đạp | R-02 | `ignore_region` cho xe, `person` cho người | Taxonomy không có lớp xe đạp |
-| 023, 039 | Xích lô | R-02 | `ignore_region` cho xe, `person` cho người | Phi cơ giới, không có lớp |
+| 003, 029 | Xe đạp | R-02 | `bicycle` cho xe, `person` cho người | Xe thật, khác xe máy |
+| 023, 039 | Xích lô | R-02 | `bicycle` cho xe, `person` cho người | Dùng sức người đạp |
 | 001, 012, 028, 036 | Xe bán tải | R-03 | `truck` | Có thùng hàng riêng tách cabin |
 | 028 | Tượng ngựa trên thùng xe bán tải | R-05 | Xe `truck`; tượng `ignore_region`; tượng không tính vào che khuất của xe | Xe thật, tượng không thật |
 | 037 | Pickup có nắp thùng | R-03 | `truck` | Thấy khe chia cabin / thùng |
@@ -174,4 +179,5 @@ Mọi con số luôn ghi kèm mẫu số, ví dụ `1/40`, để người đọc
 
 | Phiên bản | Thay đổi | Lý do (ca nào) |
 |---|---|---|
-| cá nhân | Viết lại từ v0: thêm R-01…R-10, đổi thang `occluded_level`; giữ đúng 6 lớp của taxonomy (pickup, xe buýt → `truck`; xe đạp, xích lô → `ignore_region`) | Các ca ở mục 4 |
+| cá nhân | Viết lại từ v0: thêm R-01…R-10, đổi thang `occluded_level`; pickup → `truck` | Các ca ở mục 4 |
+| cá nhân (sửa) | Thêm 3 lớp `bus`, `bicycle`, `auto_rickshaw`; không thêm lớp xe ba gác chở hàng (không có mẫu) | 009, 032; 003, 029, 023, 039; 004, 016, 035 |
