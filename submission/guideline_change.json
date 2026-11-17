@@ -1,0 +1,4 @@
+{
+  "kind": "semantic",
+  "summary": "v1.0 -> v1.1 sau IAA vòng 1 (IoU 0.822, lớp 94.2%, 992 cặp — chưa đạt). Đổi cách chọn vật và lớp: R-09 định nghĩa cụm đông (>= 5 vật), 3 điều kiện vẽ box riêng, bắt buộc ignore_region trong ảnh có cụm đông; R-02 tiêu chí duy nhất 'được xe đỡ' cho rider (khách tuk-tuk, người ngồi xe đang dừng là rider); R-01 điểm ngoài cùng và kiểm zoom; occluded_level ước lượng 4 phần, phân vân chọn mức thấp; truncated phân vân -> no; van cần đủ 2 dấu hiệu. Taxonomy không đổi (v1.0). Phạm vi: kiểm lại cả lô 40 ảnh."
+}
