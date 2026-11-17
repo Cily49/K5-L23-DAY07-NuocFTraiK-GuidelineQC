@@ -27,7 +27,8 @@ Nhãn dùng để huấn luyện mô hình phát hiện **người và phương 
 | `bicycle` | Xe đạp |
 | `fence_trailer`| Xe lồng, rơ mooc lồng |
 | `tuk tuk`| Xe lam, xe kéo tự động. |
-| `Cyclo`| Xe xích lô |
+| `cyclo`| Xe xích lô |
+| `rider` | Người tham gia giao thông phương tiện hở |
 | `person` | Người. |
 | `ignore_region` | Vùng không cần gán từng vật. |
 
